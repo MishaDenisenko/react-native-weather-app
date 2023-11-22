@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
 
 import Loading from './src/components/Loading';
 import Weather from './src/components/Weather';
