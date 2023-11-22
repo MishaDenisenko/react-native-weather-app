@@ -1,22 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { LINEAR_GRADIENT_BASE, LINEAR_GRADIENTS } from '../../constants';
 
-import { styles } from './styles';
+import WeatherInfo from './WeatherInfo';
+import WeatherDescription from './WeatherDescription';
 
+import styles from './WeatherStyles';
 
-const Weather = ({ temperature }) => {
+const Weather = ({ weatherResource }) => {
+    const [weatherConditions, setWeatherConditions] = useState(null);
+    const [gradient, setGradient] = useState(LINEAR_GRADIENT_BASE);
+    
+    useEffect(() => {
+        const { weather } = weatherResource;
+        
+        setWeatherConditions(weather[0]);
+    }, []);
+    
+    useEffect(() => {
+        !!weatherConditions && setGradient(LINEAR_GRADIENTS[weatherConditions.main]);
+    }, [weatherConditions]);
     
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>{temperature.temp}</Text>
-        </View>
+        weatherConditions &&
+        <LinearGradient colors={ gradient } style={ styles.container }>
+            <WeatherInfo weatherResource={ weatherResource } weatherConditions={ weatherConditions }/>
+            <WeatherDescription weatherResource={ weatherResource } weatherConditions={ weatherConditions }/>
+        </LinearGradient>
     );
 };
 
 Weather.propTypes = {
-    temperature: PropTypes.object,
+    weatherResource: PropTypes.object,
 };
 
 export default Weather;
